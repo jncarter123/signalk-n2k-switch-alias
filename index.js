@@ -120,10 +120,6 @@ module.exports = function(app) {
     app.debug('Plugin stopped.')
   }
 
-  function handleChange(path, value) {
-
-  }
-
   function sendPut(path, value) {
     app.putSelfPath(path, value, res => {
       app.debug(JSON.stringify(res))
