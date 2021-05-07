@@ -1,1 +1,1 @@
-# signalk-switchalias
+# signalk-n2k-switch-alias
