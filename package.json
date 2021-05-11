@@ -1,6 +1,6 @@
 {
   "name": "signalk-n2k-switch-alias",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Creates an alias for a n2k switch. For example a Maretron CMK12 switch bank has its own instance that needs to control a different switch bank with its own instance.",
   "main": "index.js",
   "keywords": [
