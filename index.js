@@ -72,32 +72,37 @@ module.exports = function(app) {
 
         if (msg.pgn == 127501) {
           let aliases = sgOptions.aliases.filter(alias => alias.instance === fields['Instance'])
+
           aliases.forEach((alias) => {
             let indicator = `Indicator${alias.indicator}`
 
-            if (fields[indicator] === 'On' || alias.action == 'Momentary') {
+            if (fields[indicator] === 'On' || alias.action === 'Momentary') {
+              let currentValue = app.getSelfPath(alias.controlPath)
 
-              let currentValue = app.getSelfPath(alias.controlPath).value
-              let newValue = 'Off'
+              if (currentValue && currentValue.hasOwnProperty('value')) {
+                let newValue = null
 
-              switch (alias.action) {
-                case 'Toggle On/Off':
-                  newValue = currentValue === 1 ? 0 : 1
-                  break
-                case 'Toggle On':
-                  newValue = 1
-                  break
-                case 'Toggle Off':
-                  newValue = 0
-                  break
-                case 'Momentary':
-                  newValue = fields[indicator] === 'On' ? 1 : 0
-                  break
-              }
+                switch (alias.action) {
+                  case 'Toggle On/Off':
+                    newValue = currentValue.value === 1 ? 0 : 1
+                    break
+                  case 'Toggle On':
+                    newValue = 1
+                    break
+                  case 'Toggle Off':
+                    newValue = 0
+                    break
+                  case 'Momentary':
+                    newValue = fields[indicator] === 'On' ? 1 : 0
+                    break
+                  default:
+                    newValue = null
+                }
 
-              if (currentValue != newValue) {
-                app.debug(`Received a switch alias control update. Setting ${alias.controlPath} to ${newValue}`)
-                sendPut(alias.controlPath, newValue)
+                if (newValue!= null && currentValue.value !== newValue) {
+                  app.debug(`Received a switch alias control update. Setting ${alias.controlPath} to ${newValue}`)
+                  sendPut(alias.controlPath, newValue)
+                }
               }
             }
           });
